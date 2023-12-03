@@ -2,6 +2,7 @@ package com.example.teamcity.api;
 
 import com.example.teamcity.api.enums.Role;
 import com.example.teamcity.api.ganerators.TestDataGenerator;
+import com.example.teamcity.api.requests.UncheckedRequests;
 import com.example.teamcity.api.requests.checked.CheckedBuildConfig;
 import com.example.teamcity.api.requests.checked.ProjectCheckedRequest;
 import com.example.teamcity.api.requests.unchecked.ProjectUncheckedeRequest;
@@ -36,10 +37,16 @@ public class RolesTest extends BaseApiTest{
     public void unauthorizedUserShouldNotHaveRightToCreateProject(){
         var testData = testDataStorage.addTestData();
 //unauth
-        uncheckedWithSuperUser.getProjectRequest()
-                .create(testData.getProject())
+       new UncheckedRequests(Specifications.getSpecifications().unAuthSpec())
+               .getProjectRequest()
+               .create(testData.getProject())
                 .then().assertThat().statusCode(HttpStatus.SC_UNAUTHORIZED)
                 .body(Matchers.containsString("Authentication required"));
+
+       //        uncheckedWithSuperUser.getProjectRequest()
+//                .create(testData.getProject())
+//                .then().assertThat().statusCode(HttpStatus.SC_UNAUTHORIZED)
+//                .body(Matchers.containsString("Authentication required"));
         //super
         uncheckedWithSuperUser.getProjectRequest()
                 .get(testData.getProject().getId())
