@@ -13,8 +13,8 @@ public class ProjectUncheckedeRequest extends Request implements CrudInterface {
     //private static  RequestSpecification spec;
 
 
-    public ProjectUncheckedeRequest(RequestSpecification user) {
-        super(user);
+    public ProjectUncheckedeRequest(RequestSpecification spec) {
+        super(spec);
     }
 
 

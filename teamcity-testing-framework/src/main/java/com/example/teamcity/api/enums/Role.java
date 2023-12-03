@@ -12,7 +12,6 @@ public enum Role {
 
     Role(String text){
         this.text = text;
-
     }
 
     public String getText(){

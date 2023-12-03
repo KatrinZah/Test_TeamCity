@@ -1,7 +1,5 @@
 package com.example.teamcity.api;
 
-import com.example.teamcity.api.ganerators.TestData;
-import com.example.teamcity.api.ganerators.TestDataGenerator;
 import com.example.teamcity.api.ganerators.TestDataStorage;
 import com.example.teamcity.api.requests.CheckedRequests;
 import com.example.teamcity.api.requests.UncheckedRequests;
@@ -9,7 +7,6 @@ import com.example.teamcity.api.specifications.Specifications;
 import lombok.Getter;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 
 @Getter
 
@@ -29,7 +26,7 @@ public class BaseApiTest extends BaseTest{
     @AfterTest
     public void cleanTest(){
         //testData.delete();
-        //testDataStorage.delete();
+        testDataStorage.delete();
     }
 
 }

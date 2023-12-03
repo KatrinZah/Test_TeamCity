@@ -1,10 +1,15 @@
 package com.example.teamcity.api.ganerators;
 
-import com.example.teamcity.api.models.*;
+import com.example.teamcity.api.models.BuildType;
+import com.example.teamcity.api.models.NewProjectDescription;
+import com.example.teamcity.api.models.Project;
+import com.example.teamcity.api.models.Role;
+import com.example.teamcity.api.models.Roles;
+import com.example.teamcity.api.models.User;
 
 import java.util.Arrays;
 
-import static java.util.Arrays.asList;
+//import static org.assertj.core.util.Arrays.asList;
 
 public class TestDataGenerator {
 
@@ -38,7 +43,6 @@ public class TestDataGenerator {
                 .build();
 
 
-
         return TestData.builder()
                 .user(user)
                 .project(project)
@@ -50,7 +54,7 @@ public class TestDataGenerator {
     public static Roles generateRoles(com.example.teamcity.api.enums.Role role, String scope){
 
         return Roles.builder()
-                .role(asList(Role.builder().roleId(role.getText())
+                .role(Arrays.asList(Role.builder().roleId(role.getText())
                         .scope(scope).build())).build();
 
     }

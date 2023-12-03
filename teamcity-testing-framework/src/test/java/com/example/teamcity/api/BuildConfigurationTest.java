@@ -1,21 +1,18 @@
 package com.example.teamcity.api;
 
-import com.example.teamcity.api.enums.Role;
 import com.example.teamcity.api.models.NewProjectDescription;
 import com.example.teamcity.api.models.Project;
-import com.example.teamcity.api.models.Roles;
 import com.example.teamcity.api.requests.checked.AuthRequest;
 import com.example.teamcity.api.requests.checked.CheckedUser;
 import com.example.teamcity.api.requests.checked.ProjectCheckedRequest;
 import com.example.teamcity.api.specifications.Specifications;
-import io.restassured.specification.RequestSpecification;
 import org.testng.annotations.Test;
 
 public class BuildConfigurationTest extends BaseApiTest {
     @Test
     public void buildConfigurationTest() {
-
         var testData = testDataStorage.addTestData();
+
         new CheckedUser(Specifications.getSpecifications()
                 .superUserSpec()).create(testData.getUser());
 
@@ -34,13 +31,13 @@ public class BuildConfigurationTest extends BaseApiTest {
       var testData = testDataStorage.addTestData();
 
       var user = testData.getUser();
-        user.setUsername("admin");
-        user.setPassword("admin");
+//        user.setUsername("admin");
+//        user.setPassword("admin");
 
-        var token = new AuthRequest(user).getCsrfToken();
-        System.out.println(token);
+//        var token = new AuthRequest(user).getCsrfToken();
+//        System.out.println(token);
 
-        var spec =  new CheckedUser(Specifications.getSpecifications().authSpec(user))//superUserSpec())
+        var spec =  new CheckedUser(Specifications.getSpecifications().superUserSpec())
                 .create(testData.getUser());
 
         System.out.println(testData.getUser().getUsername());

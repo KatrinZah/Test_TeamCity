@@ -32,7 +32,6 @@ public class TestDataStorage {
 
 
     public  void delete(){
-
         testDataList.forEach(TestData::delete);
     }
 
