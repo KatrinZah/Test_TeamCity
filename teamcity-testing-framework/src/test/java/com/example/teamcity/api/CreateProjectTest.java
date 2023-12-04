@@ -1,6 +1,5 @@
 package com.example.teamcity.api;
 
-
 import com.example.teamcity.api.enums.Role;
 import com.example.teamcity.api.ganerators.TestDataGenerator;
 import com.example.teamcity.api.requests.CheckedRequests;
@@ -12,32 +11,26 @@ import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
-public class CreateProjectTest extends BaseApiTest{
+public class CreateProjectTest extends BaseApiTest {
     @Test
-    public void unauthorizedUserTryToCreateProject(){
+    public void unauthorizedUserTryToCreateProject() {
         var testData = testDataStorage.addTestData();
-//unauth
+
         new UncheckedRequests(Specifications.getSpecifications().unAuthSpec())
                 .getProjectRequest()
                 .create(testData.getProject())
                 .then().assertThat().statusCode(HttpStatus.SC_UNAUTHORIZED)
                 .body(Matchers.containsString("Authentication required"));
 
-        //        uncheckedWithSuperUser.getProjectRequest()
-//                .create(testData.getProject())
-//                .then().assertThat().statusCode(HttpStatus.SC_UNAUTHORIZED)
-//                .body(Matchers.containsString("Authentication required"));
-        //super
         uncheckedWithSuperUser.getProjectRequest()
                 .get(testData.getProject().getId())
                 .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
-                .body(Matchers.containsString("No project found by locator 'count:1,id:"+
-                        testData.getProject().getId()+"'"));
-
+                .body(Matchers.containsString("No project found by locator 'count:1,id:" +
+                        testData.getProject().getId() + "'"));
     }
 
     @Test
-    public void authorizedUserTryToCreateProject(){
+    public void authorizedUserTryToCreateProject() {
         var testData = testDataStorage.addTestData();
 
         new CheckedUser(Specifications.getSpecifications()
@@ -52,7 +45,7 @@ public class CreateProjectTest extends BaseApiTest{
     }
 
     @Test
-    public void superUserTryToCreateProject(){
+    public void superUserTryToCreateProject() {
         var testData = testDataStorage.addTestData();
 
         var project = checkedWithSuperUser.getProjectRequest()
@@ -63,19 +56,12 @@ public class CreateProjectTest extends BaseApiTest{
     }
 
     @Test
-    public void systemAdminShouldHaveRightsToCreateProject(){
+    public void systemAdminShouldHaveRightsToCreateProject() {
         var testData = testDataStorage.addTestData();
+        testData.getUser().setRoles(TestDataGenerator.setNewRoles(Role.SYSTEM_ADMIN));
 
-        if (testData.getUser().getRoles().equals(Role.SYSTEM_ADMIN)) {
-            uncheckedWithSuperUser.getUserRequest()
-                    .create(testData.getUser());
-        } else {
-            testData.getUser().setRoles(TestDataGenerator
-                    .generateRoles(Role.SYSTEM_ADMIN, "p:" + testData.getProject().getId()));
-
-            uncheckedWithSuperUser.getUserRequest()
-                    .create(testData.getUser());
-        }
+        uncheckedWithSuperUser.getUserRequest()
+                .create(testData.getUser());
 
         var project = new ProjectCheckedRequest(Specifications.getSpecifications()
                 .authSpec(testData.getUser()))
@@ -86,26 +72,81 @@ public class CreateProjectTest extends BaseApiTest{
     }
 
     @Test
-    public void projectAdminShouldNotHaveRightsToCreateProject(){
+    public void projectAdminShouldNotHaveRightsToCreateProject() {
         var testData = testDataStorage.addTestData();
+        testData.getUser().setRoles(TestDataGenerator.setNewRoles(Role.PROJECT_ADMIN));
 
-        testData.getUser().setRoles(TestDataGenerator
-                .generateRoles(Role.PROJECT_ADMIN, "p:" + testData.getProject().getId()));
         uncheckedWithSuperUser.getUserRequest()
                 .create(testData.getUser());
 
+        new CheckedRequests(Specifications.getSpecifications().authSpec(testData.getUser()))
+                .getProjectRequest()
+                .create(testData.getProject());
 
-
-//        checkedWithSuperUser.getUserRequest()
-//                .create(testData.getUser());
-
-
-//        var project = new ProjectCheckedRequest(Specifications.getSpecifications()
-//                .authSpec(testData.getUser()))
-//                .create(testData.getProject());
-
-      //  softy.assertThat(project.getId()).isEqualTo(testData.getProject().getId());
-
+        uncheckedWithSuperUser.getProjectRequest()
+                .get(testData.getProject().getId())
+                .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body(Matchers.containsString("No project found by locator 'count:1,id:" +
+                        testData.getProject().getId() + "'"));
     }
+
+    @Test
+    public void projectManagerShouldNotHaveRightsToCreateProject(){
+        var testData = testDataStorage.addTestData();
+        testData.getUser().setRoles(TestDataGenerator.setNewRoles(Role.PROJECT_MANAGER));
+
+        uncheckedWithSuperUser.getUserRequest()
+                .create(testData.getUser());
+
+        new UncheckedRequests(Specifications.getSpecifications().authSpec(testData.getUser()))
+                .getProjectRequest()
+                        .create(testData.getProject());
+
+        uncheckedWithSuperUser.getProjectRequest()
+                .get(testData.getProject().getId())
+                .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body(Matchers.containsString("No project found by locator 'count:1,id:"+
+                        testData.getProject().getId()+"'"));
+    }
+
+    @Test
+    public void projectDeveloperShouldNotHaveRightsToCreateProject() {
+        var testData = testDataStorage.addTestData();
+        testData.getUser().setRoles(TestDataGenerator.setNewRoles(Role.PROJECT_DEVELOPER));
+
+        uncheckedWithSuperUser.getUserRequest()
+                .create(testData.getUser());
+
+        new UncheckedRequests(Specifications.getSpecifications().authSpec(testData.getUser()))
+                .getProjectRequest()
+                .create(testData.getProject());
+
+        uncheckedWithSuperUser.getProjectRequest()
+                .get(testData.getProject().getId())
+                .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body(Matchers.containsString("No project found by locator 'count:1,id:" +
+                        testData.getProject().getId() + "'"));
+    }
+
+    @Test
+    public void projectViewerShouldNotHaveRightsToCreateProject(){
+        var testData = testDataStorage.addTestData();
+        testData.getUser().setRoles(TestDataGenerator.setNewRoles(Role.PROJECT_VIEWER));
+
+        uncheckedWithSuperUser.getUserRequest()
+                .create(testData.getUser());
+
+        new UncheckedRequests(Specifications.getSpecifications().authSpec(testData.getUser()))
+                .getProjectRequest()
+                .create(testData.getProject());
+
+        uncheckedWithSuperUser.getProjectRequest()
+                .get(testData.getProject().getId())
+                .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body(Matchers.containsString("No project found by locator 'count:1,id:"+
+                        testData.getProject().getId()+"'"));
+    }
+
+
 
 }

@@ -58,4 +58,11 @@ public class TestDataGenerator {
                         .scope(scope).build())).build();
 
     }
+    public static Roles setNewRoles(com.example.teamcity.api.enums.Role role){
+
+        return Roles.builder()
+                .role(Arrays.asList(Role.builder().roleId(role.getText())
+                        .scope("g").build())).build();
+
+    }
 }
