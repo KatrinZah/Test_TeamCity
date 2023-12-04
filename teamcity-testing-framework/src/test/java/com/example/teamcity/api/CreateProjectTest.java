@@ -7,6 +7,7 @@ import com.example.teamcity.api.requests.UncheckedRequests;
 import com.example.teamcity.api.requests.checked.CheckedUser;
 import com.example.teamcity.api.requests.checked.ProjectCheckedRequest;
 import com.example.teamcity.api.specifications.Specifications;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
@@ -147,6 +148,101 @@ public class CreateProjectTest extends BaseApiTest {
                         testData.getProject().getId()+"'"));
     }
 
+    @Test
+    public void createProjectWithToLongName(){
+        var testData = testDataStorage.addTestData();
+        testData.getProject().setName("test_" + RandomStringUtils.randomAlphabetic(2056));
+        uncheckedWithSuperUser.getProjectRequest()
+                .create(testData.getProject());
 
+        uncheckedWithSuperUser.getProjectRequest()
+                .get(testData.getProject().getId())
+                .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body(Matchers.containsString("No project found by locator 'count:1,id:"+
+                        testData.getProject().getId()+"'"));
+    }
+
+    @Test
+    public void createProjectWithToShortName(){
+        var testData = testDataStorage.addTestData();
+        testData.getProject().setName("");
+        uncheckedWithSuperUser.getProjectRequest()
+                .create(testData.getProject());
+
+        uncheckedWithSuperUser.getProjectRequest()
+                .get(testData.getProject().getId())
+                .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body(Matchers.containsString("No project found by locator 'count:1,id:"+
+                        testData.getProject().getId()+"'"));
+    }
+
+    @Test
+    public void createProjectWithExistingName(){
+        var testData = testDataStorage.addTestData();
+        uncheckedWithSuperUser.getProjectRequest()
+                .create(testData.getProject());
+
+        var testData_2 = testDataStorage.addTestData();
+        testData_2.getProject().setName(testData.getProject().getName());
+        uncheckedWithSuperUser.getProjectRequest()
+                .create(testData_2.getProject());
+
+        System.out.println("Test1 = = = " + testData.getProject().getName());
+        System.out.println("Test2 = = = " + testData_2.getProject().getName());
+
+        uncheckedWithSuperUser.getProjectRequest()
+                .get(testData_2.getProject().getId())
+                .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body(Matchers.containsString("No project found by locator 'count:1,id:"+
+                        testData_2.getProject().getId()+"'"));
+    }
+
+    @Test
+    public void createProjectWithToLongId(){
+        var testData = testDataStorage.addTestData();
+        testData.getProject().setId("test_" + RandomStringUtils.randomAlphabetic(2056));
+        uncheckedWithSuperUser.getProjectRequest()
+                .create(testData.getProject());
+
+        uncheckedWithSuperUser.getProjectRequest()
+                .get(testData.getProject().getId())
+                .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body(Matchers.containsString("No project found by locator 'count:1,id:"+
+                        testData.getProject().getId()+"'"));
+    }
+    @Test
+    public void createProjectWithToShortId(){
+        var testData = testDataStorage.addTestData();
+        testData.getProject().setId("");
+        uncheckedWithSuperUser.getProjectRequest()
+                .create(testData.getProject());
+
+        uncheckedWithSuperUser.getProjectRequest()
+                .get(testData.getProject().getId())
+                .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body(Matchers.containsString("No project found by locator 'count:1,id:"+
+                        testData.getProject().getId()+"'"));
+    }
+
+    @Test
+    public void createProjectWithExistingId(){
+        var testData = testDataStorage.addTestData();
+        uncheckedWithSuperUser.getProjectRequest()
+                .create(testData.getProject());
+
+        var testData_2 = testDataStorage.addTestData();
+        testData_2.getProject().setId(testData.getProject().getId());
+        uncheckedWithSuperUser.getProjectRequest()
+                .create(testData_2.getProject());
+
+        System.out.println("Test1 = = = " + testData.getProject().getId());
+        System.out.println("Test2 = = = " + testData_2.getProject().getId());
+
+        uncheckedWithSuperUser.getProjectRequest()
+                .get(testData_2.getProject().getName())
+                .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body(Matchers.containsString("No project found by locator 'count:1,id:"+
+                        testData_2.getProject().getName()+"'"));
+    }
 
 }
