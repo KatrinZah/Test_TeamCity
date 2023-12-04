@@ -30,24 +30,18 @@ public class RolesTest extends BaseApiTest{
                 .get(testData.getProject().getId())
                 .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
 
-
     }
 
     @Test
     public void unauthorizedUserShouldNotHaveRightToCreateProject(){
         var testData = testDataStorage.addTestData();
-//unauth
+
        new UncheckedRequests(Specifications.getSpecifications().unAuthSpec())
                .getProjectRequest()
                .create(testData.getProject())
                 .then().assertThat().statusCode(HttpStatus.SC_UNAUTHORIZED)
                 .body(Matchers.containsString("Authentication required"));
 
-       //        uncheckedWithSuperUser.getProjectRequest()
-//                .create(testData.getProject())
-//                .then().assertThat().statusCode(HttpStatus.SC_UNAUTHORIZED)
-//                .body(Matchers.containsString("Authentication required"));
-        //super
         uncheckedWithSuperUser.getProjectRequest()
                 .get(testData.getProject().getId())
                 .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
@@ -71,12 +65,9 @@ public void systemAdminShouldHaveRightsToCreateProject(){
                 .create(testData.getProject());
 
         softy.assertThat(project.getId()).isEqualTo(testData.getProject().getId());
-
     }
 
-
     @Test
-
     public void projectAdminShouldHaveRightsToCreateBuildConfigToHisProject (){
         var testData = testDataStorage.addTestData();
 
@@ -88,10 +79,6 @@ public void systemAdminShouldHaveRightsToCreateProject(){
         checkedWithSuperUser.getUserRequest()
                 .create(testData.getUser());
 
-
-//       new ProjectCheckedRequest(Specifications.getSpecifications()
-//                .authSpec(testData.getUser()))
-//                .create(testData.getProject());
 
         var buildConfig = new CheckedBuildConfig(Specifications.getSpecifications().authSpec(testData.getUser()))
                 .create(testData.getBuildType());
@@ -169,7 +156,6 @@ public void systemAdminShouldHaveRightsToCreateProject(){
                 .create(testData_1.getBuildType())
                 .then().assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST);
-
     }
 
     @Test
@@ -189,11 +175,9 @@ public void systemAdminShouldHaveRightsToCreateProject(){
                 .create(testData.getBuildType())
                 .then().assertThat()
                 .statusCode(HttpStatus.SC_FORBIDDEN);
-
     }
 
     @Test
-
     public void projectManagerShouldNotHaveRightsToCreateBuildConfigToAnotherProject(){
 
         var testData_1 = testDataStorage.addTestData();
@@ -243,7 +227,6 @@ public void systemAdminShouldHaveRightsToCreateProject(){
     }
 
     @Test
-
     public void projectDeveloperShouldNotHaveRightsToCreateBuildConfigToAnotherProject(){
 
         var testData_1 = testDataStorage.addTestData();
@@ -293,7 +276,6 @@ public void systemAdminShouldHaveRightsToCreateProject(){
     }
 
     @Test
-
     public void projectViewerShouldNotHaveRightsToCreateBuildConfigToAnotherProject(){
 
         var testData_1 = testDataStorage.addTestData();
@@ -319,7 +301,6 @@ public void systemAdminShouldHaveRightsToCreateProject(){
                 .create(testData_1.getBuildType())
                 .then().assertThat()
                 .statusCode(HttpStatus.SC_FORBIDDEN);
-
     }
 
 }
