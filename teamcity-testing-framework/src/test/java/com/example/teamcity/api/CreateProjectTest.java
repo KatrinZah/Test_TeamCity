@@ -238,11 +238,13 @@ public class CreateProjectTest extends BaseApiTest {
         System.out.println("Test1 = = = " + testData.getProject().getId());
         System.out.println("Test2 = = = " + testData_2.getProject().getId());
 
+        String massage = "No project found by locator 'count:1,id:%s'";
+
         uncheckedWithSuperUser.getProjectRequest()
                 .get(testData_2.getProject().getName())
                 .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
-                .body(Matchers.containsString("No project found by locator 'count:1,id:"+
-                        testData_2.getProject().getName()+"'"));
+                .body(Matchers.containsString(String.format(massage,
+                        testData_2.getProject().getName())));
     }
 
 }
