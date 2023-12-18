@@ -12,6 +12,7 @@ public class CreateNewProject extends Page {
     private SelenideElement urlInput = element(Selectors.byId("url"));
     private SelenideElement projectNameInput = element(Selectors.byId("projectName"));
     private SelenideElement buildTypeNameInput = element(Selectors.byId("buildTypeName"));
+    private SelenideElement pageError = element(Selectors.byClass("error"));
 
 
     public CreateNewProject open(String parentProjectId){
@@ -34,4 +35,9 @@ public class CreateNewProject extends Page {
         submit();
     }
 
+    public boolean pageErrors(){
+        return pageError.isDisplayed();
+       // System.out.println("Test = " + pageError.isDisplayed());
+    }
 }
+
