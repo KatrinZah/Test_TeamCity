@@ -31,9 +31,10 @@ public class CheckedUser extends Request implements CrudInterface {
     }
 
     @Override
-    public User update(String id, Object obj) {
+    //public User update(String id, Object obj) {
+        public User update(Object obj) {
         return new UncheckedUser(spec)
-                .update(id, obj)
+                .update(obj)
                 .then().assertThat().statusCode(HttpStatus.SC_OK)
                 .extract().as(User.class);
     }

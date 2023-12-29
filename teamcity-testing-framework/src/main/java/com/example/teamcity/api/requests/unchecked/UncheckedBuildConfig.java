@@ -27,7 +27,7 @@ public class UncheckedBuildConfig extends Request implements CrudInterface {
     }
 
     @Override
-    public Object update(String id, Object obj) {
+    public Object update(Object obj) {
         return null;
     }
 

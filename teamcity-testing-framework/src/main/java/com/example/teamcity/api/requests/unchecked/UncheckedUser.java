@@ -33,11 +33,13 @@ public class UncheckedUser extends Request implements CrudInterface {
     }
 
     @Override
-    public Response update(String id, Object obj) {
+    //public Response update(String id, Object obj) {
+    public Response update(Object obj) {
         return given()
                 .spec(spec)
                 .body(obj)
-                .put(USER_ENDPOINT + "/username:" + id);
+                .put(USER_ENDPOINT + "/username:");
+                //.put(USER_ENDPOINT + "/username:" + id);
     }
 
     @Override

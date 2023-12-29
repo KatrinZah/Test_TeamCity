@@ -1,0 +1,1 @@
+{"uuid":"7eff361c-47fd-4b87-bab7-fa21b1f503a8","name":"teamcity-testing-framework","children":["65d5e7d9-0faf-4508-a354-dedc13e066c2"],"befores":[],"afters":[{"name":"cleanTest","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1701720515918,"stop":1701720515976}],"start":1701720513726,"stop":1701720515976}
