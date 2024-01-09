@@ -18,13 +18,9 @@ public class LoginPage extends Page{
     Selenide.open(LOGIN_PAGE_URL);
     return this;
     }
-
     public void login(User user){
         usernameInput.sendKeys(user.getUsername());
         passwordInput.sendKeys(user.getPassword());
         submit();
     }
-
-
-
 }
