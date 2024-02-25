@@ -1,6 +1,6 @@
 cd ..
 
-teamcity_tests_directore=$(pwd)
+teamcity_tests_directory=$(pwd)
 workdir="teamcity_tests_infrastructure"
 teamcity_server_workdir="teamcity_server"
 teamcity_agent_workdir="teamcity_agent"
@@ -49,7 +49,7 @@ echo "Teamcity Server is running.."
 echo "Start selenoid"
 cd .. && cd $selenoid_workdir
 mkdir config
-cp $teamcity_tests_directore/infra/brosers.json config/
+cp /Users/katrinzaharova/Documents/GitHub/Test/teamcity-testing-framework/infra/browsers.json config/
 
 docker run -d                                   \
             --name $selenoid_container_name                                 \
@@ -69,30 +69,39 @@ done
 ################################
 echo "Start selenoid-ui"
 
-docker run -d--name $selenoid_ui_container_name                                 \
+docker run -d --name $selenoid_ui_container_name                                 \
             -p 80:8080 aerokube/selenoid-ui:latest-release --selenoid-uri "http://$ip:4444"
 
 ################################
-echo "Setup teamcity server"
+echo "Run system tests"
+cd ../..
 mvn clean test -Dtest=SetupTest#startUpTest
 
 ################################
 echo "Parse superuser token"
-superuser_token=$(grep -o 'Super user authentication token: [0-9]*' $teamcity_tests_directory/infra/$workdir/$teamcity_server_workdir/logs/teamcity-server.log | awk '{print $NF}')
+superuser_token=$(grep -o 'Super user authentication token: [0-9]*' $teamcity_tests_directory/$workdir/$teamcity_server_workdir/logs/teamcity-server.log | awk '{print $NF}')
 echo "Super user token: $superuser_token"
 
 ################################
-echo "Run system tests"
-cd .. && cd .. && cd ..
-
-echo "host=$ip:8111\nsuperUserToken=$superuser_token\nremote=true" > $teamcity_tests_directore/src/main/resources/config.properties
-cat $$teamcity_tests_directore/src/main/resources/config.properties
-
-################################
-echo "Run system tests"
+echo "Setup teamcity server"
 
 echo "host=$ip:8111\nsuperUserToken=$superuser_token\nremote=http://$ip:4444/wd/hub\nbrowser=firefox" > $teamcity_tests_directory/src/main/resources/config.properties
 cat $teamcity_tests_directory/src/main/resources/config.properties
+
+#################
+echo "Setup teamcity agent"
+
+cd $workdir && cd $teamcity_agent_workdir
+docker pull jetbrains/teamcity-agent
+
+docker run -d \
+           -e SERVER_URL="http://$ip:8111" \
+           --name $teamcity_agent_container_name \
+           -v $(pwd)/conf:/data/teamcity_agent/conf jetbrains/teamcity-agent
+
+cd $teamcity_tests_directory
+
+mvn test -Dtest=TeamCityAgentTest#setupTeamCityAgentTest
 
 echo "Run API tests"
 mvn test -DsuiteXmlFile=testng-suites/api-suite.xml
