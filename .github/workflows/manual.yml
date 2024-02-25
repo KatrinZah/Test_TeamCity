@@ -50,7 +50,7 @@ jobs:
           jetbrains/teamcity-server:2023.11.1
 
       - name: Set up TeamCity server
-        run: teamcity-testing-framework/mvnw clean test -Dtest=SetupTest#startUpTest
+        run: cd teamcity-testing-framework && ./mvnw clean test -Dtest=SetupTest#startUpTest
 
       - name: Set up superUserToken environment variable
         run: echo "SUPER_USER_TOKEN=$(docker logs teamcity-server | grep 'Super user authentication token' | tail -n 1 | awk '{print $6}')" >> $GITHUB_ENV
@@ -65,7 +65,7 @@ jobs:
           jetbrains/teamcity-agent:2023.11.1
 
       - name: Set up TeamCity agent
-        run: ./mvnw test -Dtest=TeamCityAgentTest#setupTeamCityAgentTest
+        run: cd teamcity-testing-framework && ./mvnw test -Dtest=TeamCityAgentTest#setupTeamCityAgentTest
 
       - name: Run API tests
         run: mvn test -DsuiteXmlFile=testng-suites/api-suite.xml
@@ -99,7 +99,7 @@ jobs:
 
       - name: Run Swagger coverage
         if: always()
-        run: teamcity-testing-framework/.swagger-coverage-commandline/bin/swagger-coverage-commandline -s http://$HOST:8111/app/rest/swagger.json -i target/swagger-coverage-output
+        run: cd teamcity-testing-framework && ./.swagger-coverage-commandline/bin/swagger-coverage-commandline -s http://$HOST:8111/app/rest/swagger.json -i target/swagger-coverage-output
 
       - name: Save Swagger coverage
         uses: actions/upload-artifact@v4
