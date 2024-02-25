@@ -4,6 +4,7 @@ import com.example.teamcity.api.ganerators.TestDataStorage;
 import com.example.teamcity.api.requests.CheckedRequests;
 import com.example.teamcity.api.requests.UncheckedRequests;
 import com.example.teamcity.api.specifications.Specifications;
+import io.restassured.http.ContentType;
 import lombok.Getter;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
@@ -29,4 +30,11 @@ public class BaseApiTest extends BaseTest{
         testDataStorage.delete();
     }
 
+    protected void authorizeAgent(String needAuth, String locator) {
+        var spec = Specifications.getSpecifications().superUserSpec();
+
+        spec.contentType(ContentType.TEXT);
+        spec.accept(ContentType.TEXT);
+       // new CheckedRequests(spec.build()).getRequest(Endpoint.AGENT).update(needAuth, locator + "/authorized");
+    }
 }

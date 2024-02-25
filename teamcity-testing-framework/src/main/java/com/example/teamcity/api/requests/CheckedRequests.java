@@ -13,10 +13,23 @@ public class CheckedRequests {
     private ProjectCheckedRequest projectRequest;
     private CheckedBuildConfig buildConfigRequest;
 
+    //private final EnumMap<Endpoint, CheckedBase> checkedRequests = new EnumMap<>(Endpoint.class);
+
+
     public CheckedRequests(RequestSpecification spec){
 
         this.userRequest = new CheckedUser(spec);
         this.buildConfigRequest = new CheckedBuildConfig(spec);
         this.projectRequest = new ProjectCheckedRequest(spec);
     }
+
+//    public CheckedRequests(RequestSpecification spec, RequestSpecification spec2) {
+//        for (var endpoint : Endpoint.values()) {
+//            checkedRequests.put(endpoint, new CheckedBase(spec, endpoint));
+//        }
+//    }
+
+   // public CheckedBase getRequest(Endpoint endpoint) {
+//        return checkedRequests.get(endpoint);
+//    }
 }

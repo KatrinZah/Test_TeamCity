@@ -9,7 +9,7 @@ import static io.restassured.RestAssured.given;
 
 public class ProjectUncheckedeRequest extends Request implements CrudInterface {
 
-    private  static  final String PROJECT_ENDPOINT = "/app/rest/projects";
+    public static final String PROJECT_ENDPOINT = "/app/rest/projects";
     //private static  RequestSpecification spec;
 
 
