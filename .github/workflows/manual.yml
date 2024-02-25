@@ -21,7 +21,7 @@ jobs:
           echo "HOST=$(ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1)" >> $GITHUB_ENV
 
       - name: Setup host config.properties
-        run: echo "host=$HOST:8111" >> src/main/resources/config.properties
+        run: echo "host=$HOST:8111" >> teamcity-testing-framework/src/main/resources/config.properties
 
       - name: Pull Selenoid Chrome/Firefox/..
         run: docker pull selenoid/vnc_chrome:119.0
@@ -56,7 +56,7 @@ jobs:
         run: echo "SUPER_USER_TOKEN=$(docker logs teamcity-server | grep 'Super user authentication token' | tail -n 1 | awk '{print $6}')" >> $GITHUB_ENV
 
       - name: Set up superUserToken config property
-        run: echo "superUserToken=$SUPER_USER_TOKEN" >> src/main/resources/config.properties
+        run: echo "superUserToken=$SUPER_USER_TOKEN" >> teamcity-testing-framework/src/main/resources/config.properties
 
       - name: Run TeamCity agent
         run: |
@@ -99,7 +99,7 @@ jobs:
 
       - name: Run Swagger coverage
         if: always()
-        run: ./.swagger-coverage-commandline/bin/swagger-coverage-commandline -s http://$HOST:8111/app/rest/swagger.json -i target/swagger-coverage-output
+        run: teamcity-testing-framework/.swagger-coverage-commandline/bin/swagger-coverage-commandline -s http://$HOST:8111/app/rest/swagger.json -i target/swagger-coverage-output
 
       - name: Save Swagger coverage
         uses: actions/upload-artifact@v4
@@ -107,5 +107,5 @@ jobs:
         with:
           name: swagger-coverage
           path: |
-            swagger-coverage-report.html
-            swagger-coverage-results.json
+            teamcity-testing-framework/swagger-coverage-report.html
+            teamcity-testing-framework/swagger-coverage-results.json
