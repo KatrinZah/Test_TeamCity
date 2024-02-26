@@ -79,7 +79,7 @@ jobs:
         working-directory: ./teamcity-testing-framework
 
       - name: Fetch Swagger specification
-        run: curl http://$HOST:8111/app/rest/swagger.json --output swagger.json
+        run: curl http://$HOST:8111/app/rest/swagger.json --output ./swagger.json
         working-directory: ./teamcity-testing-framework
 
       - name: Run API tests
@@ -116,7 +116,7 @@ jobs:
 
       - name: Run Swagger coverage
         if: always()
-        run: ./.swagger-coverage-commandline/bin/swagger-coverage-commandline -s swagger.json -i target/swagger-coverage-output
+        run: ./.swagger-coverage-commandline/bin/swagger-coverage-commandline -s swagger.json -i target/swagger-coverage-output --verbose
         working-directory: ./teamcity-testing-framework
 
       - name: Save Swagger coverage
