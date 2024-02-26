@@ -22,6 +22,8 @@ jobs:
 
       - name: Change working directory
         run: pushd teamcity-testing-framework
+      - name: Check working directory
+        run: echo "$(pwd)"
         
       - name: Setup host config.properties
         run: echo "host=$HOST:8111" >> src/main/resources/config.properties
