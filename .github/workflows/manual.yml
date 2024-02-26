@@ -19,9 +19,16 @@ jobs:
       - name: Set up host enviroment variables
         run: |
           echo "HOST=$(ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1)" >> $GITHUB_ENV
-
+       
+      - name: Display dir
+        run: ls -a
+         
       - name: Change working directory
-        run: pushd teamcity-testing-framework
+        run: cd teamcity-testing-framework
+      
+      - name: Display dir
+        run: ls -a
+        
       - name: Check working directory
         run: echo "$(pwd)"
         
