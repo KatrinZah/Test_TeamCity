@@ -84,9 +84,9 @@ jobs:
         run: mvn test -DsuiteXmlFile=testng-suites/ui-suite.xml
         working-directory: ./teamcity-testing-framework
 
-      - name: Fetch Swagger specification
-        run: curl http://$HOST:8111/app/rest/swagger.json --output ./swagger.json && cat ./swagger.json
-        working-directory: ./teamcity-testing-framework
+      # - name: Fetch Swagger specification
+      #   run: curl http://$HOST:8111/app/rest/swagger.json --output ./swagger.json && cat ./swagger.json
+      #   working-directory: ./teamcity-testing-framework
 
       - name: Load test report history
         uses: actions/checkout@v4
