@@ -112,7 +112,7 @@ jobs:
 
       - name: Run Swagger coverage
         if: always()
-        run: ./.swagger-coverage-commandline/bin/swagger-coverage-commandline -s http://$HOST:8111/app/rest/swagger.json -i target/swagger-coverage-output
+        run: ./.swagger-coverage-commandline/bin/swagger-coverage-commandline -s http://$HOST:8111/app/rest/swagger.json -i target/swagger-coverage-output --verbose
         working-directory: ./teamcity-testing-framework
 
       - name: Save Swagger coverage
