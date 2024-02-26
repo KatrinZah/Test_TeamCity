@@ -52,7 +52,7 @@ jobs:
           -v $(pwd)/tmp/teamcity_server/datadir:/data/teamcity_server/datadir \
           -v $(pwd)/tmp/teamcity_server/logs:/opt/teamcity/logs \
           -p 8111:8111 \
-          jetbrains/teamcity-server:2023.11.1
+          jetbrains/teamcity-server
         working-directory: ./teamcity-testing-framework
 
       - name: Set up TeamCity server
