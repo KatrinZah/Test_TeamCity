@@ -78,16 +78,16 @@ jobs:
         run: ./mvnw test -Dtest=TeamCityAgentTest#setupTeamCityAgentTest
         working-directory: ./teamcity-testing-framework
 
-      - name: Fetch Swagger specification
-        run: curl http://$HOST:8111/app/rest/swagger.json --output ./swagger.json && cat ./swagger.json
-        working-directory: ./teamcity-testing-framework
-
       - name: Run API tests
         run: mvn test -DsuiteXmlFile=testng-suites/api-suite.xml
         working-directory: ./teamcity-testing-framework
 
       - name: Run UI tests
         run: mvn test -DsuiteXmlFile=testng-suites/ui-suite.xml
+        working-directory: ./teamcity-testing-framework
+
+      - name: Fetch Swagger specification
+        run: curl http://$HOST:8111/app/rest/swagger.json --output ./swagger.json && cat ./swagger.json
         working-directory: ./teamcity-testing-framework
 
       - name: Load test report history
